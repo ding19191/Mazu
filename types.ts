@@ -1,3 +1,4 @@
+
 export enum AppPhase {
   INPUT = 'INPUT',
   DRAWING = 'DRAWING',
@@ -16,14 +17,13 @@ export enum DivinationResult {
 export interface FortunePoem {
   stickNumber: number;
   title: string;
-  history: string;   // 完整的歷史故事
-  story: string;     // 典故精髓/短評
   poem: string[];
-  meaning: string;
-  advice: string;
-  wealth: string;
-  career: string;
-  romance: string;
-  education: string;
-  luck: string;
+  history: string;   // 1. 歷史故事
+  essence: string;   // 2. 典故精髓
+  advice: string;    // 3. 大師開示詳解
+  luck: string;      // 4. 五大維度：運勢
+  career: string;    // 4. 五大維度：事業
+  wealth: string;    // 4. 五大維度：財運
+  romance: string;   // 4. 五大維度：感情
+  education: string; // 4. 五大維度：學業
 }
