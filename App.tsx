@@ -14,7 +14,6 @@ const App: React.FC = () => {
   const [stickNumber, setStickNumber] = useState<number | null>(null);
   const [divinationResult, setDivinationResult] = useState<DivinationResult>(DivinationResult.NONE);
   const [fortune, setFortune] = useState<FortunePoem | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   const handleDrawingStick = useCallback(() => {
     setPhase(AppPhase.DRAWING);
@@ -22,8 +21,10 @@ const App: React.FC = () => {
     setStickNumber(null);
     setDivinationResult(DivinationResult.NONE);
     
+    // 模擬抽籤晃動的時間
     setTimeout(() => {
-      setStickNumber(Math.floor(Math.random() * 60) + 1);
+      const num = Math.floor(Math.random() * 60) + 1;
+      setStickNumber(num);
       setPhase(AppPhase.STRICT_REVEALED);
       setIsProcessing(false);
     }, 1500);
@@ -31,7 +32,6 @@ const App: React.FC = () => {
 
   const startDrawing = () => {
     if (!question.trim()) return;
-    setError(null);
     handleDrawingStick();
   };
 
@@ -43,6 +43,7 @@ const App: React.FC = () => {
       const rand = Math.random();
       let result: DivinationResult;
       
+      // 調整機率：聖筊 45%, 笑筊 30%, 陰筊 25%
       if (rand < 0.45) { 
         result = DivinationResult.SHENG_JIAO;
       } else if (rand < 0.75) {
@@ -56,18 +57,15 @@ const App: React.FC = () => {
 
       if (result === DivinationResult.SHENG_JIAO) {
         setIsAnalyzing(true);
-        try {
-          const data = await fetchFortunePoem(question);
-          setFortune(data);
-          setTimeout(() => {
-            setPhase(AppPhase.RESULT);
-            setIsAnalyzing(false);
-          }, 1000);
-        } catch (err) {
-          setError("系統感應異常。");
+        // 完全本地讀取資料
+        const data = await fetchFortunePoem(question);
+        setFortune(data);
+        setTimeout(() => {
+          setPhase(AppPhase.RESULT);
           setIsAnalyzing(false);
-        }
+        }, 1200);
       } else {
+        // 若不是聖筊，2秒後自動重抽
         setTimeout(() => {
           handleDrawingStick(); 
         }, 2000);
@@ -81,7 +79,6 @@ const App: React.FC = () => {
     setStickNumber(null);
     setDivinationResult(DivinationResult.NONE);
     setFortune(null);
-    setError(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -90,22 +87,16 @@ const App: React.FC = () => {
   return (
     <div className={`min-h-screen w-full flex flex-col items-center p-4 transition-all duration-1000 ${isResultPhase ? 'pt-12 pb-24' : 'justify-center'}`}>
       
-      {/* 標題與標語 */}
+      {/* 標題 */}
       {phase !== AppPhase.STRICT_REVEALED && phase !== AppPhase.DRAWING && !isAnalyzing && (
         <header className="mb-8 md:mb-12 text-center animate-fadeIn">
           <h1 className="text-5xl md:text-7xl font-calligraphy text-red-700 drop-shadow-[0_0_20px_rgba(220,38,38,0.8)]">
             天后靈籤
           </h1>
           <p className="text-amber-200/40 font-serif-tc tracking-[0.5em] text-[10px] uppercase mt-2">
-            Heavenly Guidance & Divine Insight
+            Offline Fortune System ‧ No Internet Required
           </p>
         </header>
-      )}
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-950/80 border border-red-500/50 rounded-lg text-red-100 text-xs animate-pulse">
-          {error}
-        </div>
       )}
 
       {/* 輸入區 */}
@@ -120,7 +111,7 @@ const App: React.FC = () => {
             <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="請虔誠輸入求問之事（如：事業轉機、婚姻緣分、考試考運...）"
+              placeholder="請虔誠輸入求問之事（如：事業、姻緣、健康...）"
               className="w-full h-32 md:h-40 bg-black/40 border-amber-900/20 border-2 p-5 text-amber-50 placeholder-stone-700 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-red-900 transition-all font-serif-tc text-base md:text-lg leading-relaxed shadow-inner"
             />
             <button
@@ -131,13 +122,13 @@ const App: React.FC = () => {
               誠 心 求 籤
             </button>
             <p className="text-center text-amber-900/40 text-[10px] mt-6 tracking-widest font-serif-tc">
-              心誠則靈 ‧ 萬事如意
+              100% 離線版本 ‧ 心誠則靈
             </p>
           </div>
         </div>
       )}
 
-      {/* 抽籤與擲筊過程 */}
+      {/* 抽籤與擲筊 */}
       {(phase === AppPhase.DRAWING || phase === AppPhase.STRICT_REVEALED) && !isAnalyzing && (
         <div className="flex flex-col items-center w-full animate-fadeIn">
           <div className={`transition-all duration-700 ${phase === AppPhase.STRICT_REVEALED ? 'scale-[0.3] -mt-16 -mb-24 opacity-20 rotate-12' : 'scale-110 my-4'}`}>
@@ -149,11 +140,6 @@ const App: React.FC = () => {
               <p className="text-amber-100 font-calligraphy text-4xl md:text-6xl animate-pulse tracking-[0.8em]">
                 感 應 中
               </p>
-              <div className="mt-4 flex justify-center gap-2">
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="w-2 h-2 bg-red-700 rounded-full animate-bounce" style={{ animationDelay: `${i * 0.2}s` }}></div>
-                ))}
-              </div>
             </div>
           )}
           
@@ -161,7 +147,7 @@ const App: React.FC = () => {
             <div className="flex flex-col items-center w-full animate-fadeIn">
               <div className="bg-[#fffbeb] text-amber-950 px-10 py-4 rounded-2xl shadow-2xl border-2 border-amber-200 flex flex-col items-center z-20 mb-4 transform hover:scale-105 transition-transform">
                 <span className="text-4xl md:text-5xl font-bold font-serif-tc mb-1">第 {stickNumber} 籤</span>
-                <span className="text-[10px] text-amber-800/80 font-serif-tc tracking-[0.4em] font-black uppercase">Oracle Received</span>
+                <span className="text-[10px] text-amber-800/80 font-serif-tc tracking-[0.4em] font-black uppercase">Stick Drawn</span>
               </div>
               
               <div className="w-full flex flex-col items-center">
@@ -180,9 +166,8 @@ const App: React.FC = () => {
                   {(divinationResult === DivinationResult.XIAO_JIAO || divinationResult === DivinationResult.YIN_JIAO) && !isProcessing && (
                     <div className="flex flex-col items-center gap-3 text-center py-4 px-10 rounded-3xl bg-black/60 border border-red-900/30 backdrop-blur-md">
                       <p className="text-red-500 font-calligraphy text-3xl animate-pulse">
-                        {divinationResult === DivinationResult.XIAO_JIAO ? "神明微笑 ‧ 非此靈籤" : "神明不允 ‧ 請再祈求"}
+                        {divinationResult === DivinationResult.XIAO_JIAO ? "神明微笑 ‧ 請重抽" : "神明不允 ‧ 請重抽"}
                       </p>
-                      <p className="text-amber-200/40 text-xs font-serif-tc tracking-[0.4em] uppercase">自動重抽中...</p>
                     </div>
                   )}
                 </div>
@@ -192,14 +177,13 @@ const App: React.FC = () => {
         </div>
       )}
 
-      {/* 分析等待畫面 */}
+      {/* 分析等待 */}
       {isAnalyzing && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-2xl">
           <div className="text-center px-6">
             <div className="relative w-40 h-40 mx-auto mb-10">
-              <div className="absolute inset-0 border-4 border-red-600/10 rounded-full scale-110"></div>
               <div className="absolute inset-0 border-t-4 border-red-700 rounded-full animate-spin"></div>
-              <div className="absolute inset-4 border-2 border-amber-900/20 rounded-full flex items-center justify-center">
+              <div className="absolute inset-4 flex items-center justify-center">
                  <span className="text-red-900 font-brush text-5xl">靈</span>
               </div>
             </div>
@@ -207,7 +191,7 @@ const App: React.FC = () => {
               聖 筊 已 現
             </h2>
             <p className="text-amber-200/60 font-serif-tc text-lg tracking-[0.2em]">
-              大師正在為您參悟籤意，請稍候...
+              正在開啟籤譜，請稍候...
             </p>
           </div>
         </div>
@@ -223,17 +207,14 @@ const App: React.FC = () => {
           >
             謝 謝 神 恩
           </button>
-          <div className="pb-10 text-stone-600 text-[10px] tracking-[0.4em] font-serif-tc uppercase">
-            Heavenly Palace Digital Archive
-          </div>
         </div>
       )}
 
-      {/* 頁尾註腳 */}
+      {/* 頁尾 */}
       {!isResultPhase && (
         <footer className="fixed bottom-6 w-full flex justify-center z-20">
           <div className="text-stone-800 text-[9px] tracking-[1.2em] font-serif-tc uppercase bg-black/30 px-6 py-2 rounded-full border border-white/5 pointer-events-none backdrop-blur-sm">
-            Aesthetically Divine ‧ Precision Oracle
+            Standalone Offline Version ‧ No API Used
           </div>
         </footer>
       )}
