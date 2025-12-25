@@ -21,7 +21,7 @@ const FortunePaper: React.FC<FortunePaperProps> = ({ fortune }) => {
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-multiply bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]"></div>
       
       <div className="relative z-10">
-        {/* 1. 籤頭與基本資訊 */}
+        {/* 1. 籤頭區域 */}
         <div className="flex justify-between items-start mb-12 border-b-2 border-red-900/20 pb-10">
           <div className="flex items-center gap-6 md:gap-10">
             <div className="vertical-text text-red-900 font-black text-6xl md:text-8xl ink-text leading-none tracking-tighter">
@@ -46,8 +46,12 @@ const FortunePaper: React.FC<FortunePaperProps> = ({ fortune }) => {
           </div>
         </div>
 
-        {/* 2. 籤詩內容 (必須顯示在最上方) */}
+        {/* 2. 【 靈 籤 詩 文 】 - 絕對優先第一位 */}
         <section className="mb-20">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-2 bg-red-900 rotate-45"></div>
+            <h3 className="text-lg font-black text-red-900 tracking-[0.4em]">【 靈 籤 詩 文 】</h3>
+          </div>
           <div className="flex flex-col items-center gap-8 md:gap-12 py-16 bg-stone-100/40 rounded-sm border-y border-stone-200/50 shadow-inner">
             {fortune.poem.map((line, idx) => (
               <p key={idx} className="text-3xl md:text-5xl font-black text-stone-900 ink-text tracking-[0.4em] leading-none">
@@ -57,7 +61,7 @@ const FortunePaper: React.FC<FortunePaperProps> = ({ fortune }) => {
           </div>
         </section>
 
-        {/* 3. 歷史故事 */}
+        {/* 3. 【 歷 史 故 事 】 - 順序二 */}
         <section className="mb-14">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-2 h-2 bg-red-900 rotate-45"></div>
@@ -70,7 +74,7 @@ const FortunePaper: React.FC<FortunePaperProps> = ({ fortune }) => {
           </div>
         </section>
 
-        {/* 4. 典故精髓 */}
+        {/* 4. 【 典 故 精 髓 】 - 順序三 */}
         <section className="mb-14">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-2 h-2 bg-red-900 rotate-45"></div>
@@ -81,7 +85,7 @@ const FortunePaper: React.FC<FortunePaperProps> = ({ fortune }) => {
           </div>
         </section>
 
-        {/* 5. 大師開示詳解 */}
+        {/* 5. 【 大 師 詳 解 】 - 順序四 */}
         <section className="bg-[#fefaf4] p-8 md:p-12 rounded-sm border border-red-900/5 relative shadow-xl mb-14">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-900/20 to-transparent"></div>
           <h3 className="text-[13px] font-black text-red-800 tracking-[1em] mb-10 flex items-center justify-center border-b border-red-900/10 pb-6">
@@ -92,7 +96,7 @@ const FortunePaper: React.FC<FortunePaperProps> = ({ fortune }) => {
           </div>
         </section>
 
-        {/* 6. 五大維度詳解 */}
+        {/* 6. 【 命 途 詳 析 】 - 順序五 */}
         <section>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-2 h-2 bg-red-900 rotate-45"></div>
