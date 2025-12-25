@@ -10,7 +10,7 @@ export const fetchFortunePoem = async (question: string, stickNumber: number): P
   // 增加沉浸式的等待時間，模擬「大師參悟」過程
   await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // 嚴格從本地庫獲取「該號碼」的數據，不再自行生成隨機數
+  // 嚴格從本地庫獲取「該號碼」的數據
   const localData = getLocalFortune(stickNumber);
 
   return {
@@ -19,6 +19,11 @@ export const fetchFortunePoem = async (question: string, stickNumber: number): P
     story: localData.story,
     poem: localData.poem,
     meaning: `此籤為「${localData.level}」。`,
-    advice: localData.advice // 使用資料庫中對應的詳盡解析
+    advice: localData.advice,
+    wealth: localData.wealth,
+    career: localData.career,
+    romance: localData.romance,
+    education: localData.education,
+    luck: localData.luck
   };
 };

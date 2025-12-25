@@ -21,4 +21,10 @@ export interface FortunePoem {
   poem: string[];
   meaning: string;
   advice: string;
+  // 新增細項解析
+  wealth: string;
+  career: string;
+  romance: string;
+  education: string;
+  luck: string;
 }
