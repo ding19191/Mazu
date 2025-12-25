@@ -23,6 +23,7 @@ const App: React.FC = () => {
     
     // 模擬抽籤晃動的時間
     setTimeout(() => {
+      // 抽籤階段決定號碼
       const num = Math.floor(Math.random() * 60) + 1;
       setStickNumber(num);
       setPhase(AppPhase.STRICT_REVEALED);
@@ -36,6 +37,8 @@ const App: React.FC = () => {
   };
 
   const throwBlocks = useCallback(async () => {
+    if (stickNumber === null) return;
+    
     setIsProcessing(true);
     setDivinationResult(DivinationResult.NONE);
     
@@ -57,8 +60,8 @@ const App: React.FC = () => {
 
       if (result === DivinationResult.SHENG_JIAO) {
         setIsAnalyzing(true);
-        // 完全本地讀取資料
-        const data = await fetchFortunePoem(question);
+        // 關鍵修正：將目前畫面上看到的 stickNumber 傳入服務
+        const data = await fetchFortunePoem(question, stickNumber);
         setFortune(data);
         setTimeout(() => {
           setPhase(AppPhase.RESULT);
@@ -71,7 +74,7 @@ const App: React.FC = () => {
         }, 2000);
       }
     }, 800);
-  }, [question, handleDrawingStick]);
+  }, [question, stickNumber, handleDrawingStick]);
 
   const reset = () => {
     setPhase(AppPhase.INPUT);
