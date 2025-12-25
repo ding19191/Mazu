@@ -88,10 +88,16 @@ const App: React.FC = () => {
   const isResultPhase = phase === AppPhase.RESULT;
 
   return (
-    <div className={`min-h-screen flex flex-col items-center p-4 bg-[url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-fixed bg-center transition-all duration-1000 ${isResultPhase ? 'overflow-visible' : 'overflow-hidden'}`}>
-      <div className="absolute inset-0 bg-black/85 backdrop-blur-md z-0 pointer-events-none"></div>
+    <div className="min-h-screen w-full relative">
+      {/* 固定背景層：確保捲動時背景圖與黑色遮罩始終填滿螢幕 */}
+      <div 
+        className="fixed inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center transition-opacity duration-1000"
+      >
+        <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
+      </div>
 
-      <div className={`relative z-10 w-full max-w-2xl flex flex-col items-center ${isResultPhase ? 'py-12' : 'h-[100vh] justify-center'}`}>
+      {/* 內容層 */}
+      <div className={`relative z-10 w-full flex flex-col items-center p-4 transition-all duration-1000 ${isResultPhase ? 'pt-8 pb-20' : 'h-screen justify-center'}`}>
         
         {phase !== AppPhase.STRICT_REVEALED && phase !== AppPhase.DRAWING && !isAnalyzing && (
           <header className="mb-8 md:mb-12 text-center animate-fadeIn">
@@ -105,7 +111,7 @@ const App: React.FC = () => {
         )}
 
         {error && (
-          <div className="mb-4 p-3 bg-red-950/80 border border-red-500/50 rounded-lg text-red-100 text-xs animate-pulse z-50">
+          <div className="mb-4 p-3 bg-red-950/80 border border-red-500/50 rounded-lg text-red-100 text-xs animate-pulse">
             {error}
           </div>
         )}
@@ -208,17 +214,12 @@ const App: React.FC = () => {
               <p className="text-amber-200/60 font-serif-tc text-lg tracking-[0.2em]">
                 大師正在為您參悟籤意，請稍候...
               </p>
-              <div className="mt-8 flex justify-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="w-1.5 h-1.5 bg-red-900/40 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.1}s` }}></div>
-                ))}
-              </div>
             </div>
           </div>
         )}
 
         {phase === AppPhase.RESULT && fortune && (
-          <div className="flex flex-col items-center space-y-12 animate-fadeIn w-full">
+          <div className="flex flex-col items-center space-y-12 animate-fadeIn w-full max-w-2xl">
             <FortunePaper fortune={fortune} />
             <button
               onClick={reset}
@@ -226,7 +227,7 @@ const App: React.FC = () => {
             >
               謝 謝 神 恩
             </button>
-            <div className="pb-16 text-stone-600 text-[10px] tracking-[0.4em] font-serif-tc uppercase">
+            <div className="pb-10 text-stone-600 text-[10px] tracking-[0.4em] font-serif-tc uppercase">
               Heavenly Palace Digital Archive
             </div>
           </div>
@@ -234,8 +235,10 @@ const App: React.FC = () => {
       </div>
 
       {!isResultPhase && (
-        <footer className="fixed bottom-6 text-stone-800 text-[9px] tracking-[1.2em] font-serif-tc uppercase bg-black/30 px-6 py-2 rounded-full border border-white/5 pointer-events-none backdrop-blur-sm">
-          Aesthetically Divine ‧ Precision Oracle
+        <footer className="fixed bottom-6 w-full flex justify-center z-20">
+          <div className="text-stone-800 text-[9px] tracking-[1.2em] font-serif-tc uppercase bg-black/30 px-6 py-2 rounded-full border border-white/5 pointer-events-none backdrop-blur-sm">
+            Aesthetically Divine ‧ Precision Oracle
+          </div>
         </footer>
       )}
     </div>
