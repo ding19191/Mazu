@@ -82,15 +82,16 @@ const App: React.FC = () => {
     setDivinationResult(DivinationResult.NONE);
     setFortune(null);
     setError(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const isResultPhase = phase === AppPhase.RESULT;
 
   return (
-    <div className={`min-h-screen flex flex-col items-center p-4 bg-[url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-fixed bg-center ${isResultPhase ? 'overflow-y-auto' : 'overflow-hidden max-h-screen'}`}>
+    <div className={`min-h-screen flex flex-col items-center p-4 bg-[url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-fixed bg-center transition-all duration-1000 ${isResultPhase ? 'overflow-visible' : 'overflow-hidden'}`}>
       <div className="absolute inset-0 bg-black/85 backdrop-blur-md z-0 pointer-events-none"></div>
 
-      <div className={`relative z-10 w-full max-w-2xl flex flex-col items-center ${isResultPhase ? 'py-8' : 'h-full justify-center'}`}>
+      <div className={`relative z-10 w-full max-w-2xl flex flex-col items-center ${isResultPhase ? 'py-12' : 'h-[100vh] justify-center'}`}>
         
         {phase !== AppPhase.STRICT_REVEALED && phase !== AppPhase.DRAWING && !isAnalyzing && (
           <header className="mb-8 md:mb-12 text-center animate-fadeIn">
@@ -217,15 +218,15 @@ const App: React.FC = () => {
         )}
 
         {phase === AppPhase.RESULT && fortune && (
-          <div className="flex flex-col items-center space-y-10 animate-fadeIn w-full">
+          <div className="flex flex-col items-center space-y-12 animate-fadeIn w-full">
             <FortunePaper fortune={fortune} />
             <button
               onClick={reset}
-              className="px-16 py-5 bg-stone-900/90 text-amber-100 font-bold rounded-full transition-all shadow-2xl font-serif-tc tracking-[1em] border-2 border-amber-900/30 text-lg hover:bg-black hover:border-amber-600/50"
+              className="px-16 py-6 bg-stone-900/90 text-amber-100 font-bold rounded-full transition-all shadow-2xl font-serif-tc tracking-[1em] border-2 border-amber-900/30 text-xl hover:bg-black hover:border-amber-600/50 active:scale-95"
             >
               謝 謝 神 恩
             </button>
-            <div className="pb-12 text-stone-600 text-[10px] tracking-[0.4em] font-serif-tc uppercase">
+            <div className="pb-16 text-stone-600 text-[10px] tracking-[0.4em] font-serif-tc uppercase">
               Heavenly Palace Digital Archive
             </div>
           </div>
