@@ -1,4 +1,3 @@
-
 import { FortunePoem } from "../types";
 import { getLocalFortune } from "../data/fortuneData";
 
@@ -16,9 +15,11 @@ export const fetchFortunePoem = async (question: string, stickNumber: number): P
   return {
     stickNumber: localData.id,
     title: localData.title,
+    history: localData.history,
     story: localData.story,
     poem: localData.poem,
-    meaning: `此籤為「${localData.level}」。`,
+    // 修正：優先使用原始數據中的 meaning，若未定義則根據 level 生成預設描述
+    meaning: localData.meaning || `此籤為「${localData.level}」。`,
     advice: localData.advice,
     wealth: localData.wealth,
     career: localData.career,

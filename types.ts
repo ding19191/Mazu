@@ -1,4 +1,3 @@
-
 export enum AppPhase {
   INPUT = 'INPUT',
   DRAWING = 'DRAWING',
@@ -8,20 +7,20 @@ export enum AppPhase {
 }
 
 export enum DivinationResult {
-  SHENG_JIAO = 'SHENG_JIAO', // 聖筊 (One flat, one round)
-  XIAO_JIAO = 'XIAO_JIAO',   // 笑筊 (Two flat)
-  YIN_JIAO = 'YIN_JIAO',     // 陰筊 (Two round)
+  SHENG_JIAO = 'SHENG_JIAO', 
+  XIAO_JIAO = 'XIAO_JIAO',   
+  YIN_JIAO = 'YIN_JIAO',     
   NONE = 'NONE'
 }
 
 export interface FortunePoem {
   stickNumber: number;
   title: string;
-  story: string;
+  history: string;   // 完整的歷史故事
+  story: string;     // 典故精髓/短評
   poem: string[];
   meaning: string;
   advice: string;
-  // 新增細項解析
   wealth: string;
   career: string;
   romance: string;
